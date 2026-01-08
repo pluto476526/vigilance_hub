@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ incident.title }} - VigilanceHub{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <!-- Incident Header -->
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h1 class="h2 fw-bold mb-2">{{ incident.title }}</h1>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge bg-{% if incident.severity == 'critical' %}danger{% elif incident.severity == 'high' %}warning{% elif incident.severity == 'medium' %}info{% else %}success{% endif %} fs-6">
+                                {{ incident.get_severity_display }}
+                            </span>
+                            <span class="badge bg-secondary fs-6">
+                                {{ incident.get_incident_type_display }}
+                            </span>
+                            {% if incident.verified %}
+                            <span class="badge bg-success fs-6">
+                                <i class="bi bi-check-circle"></i> Verified
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted d-block">Reported</small>
+                        <strong>{{ incident.created_at|date:"M d, Y H:i" }}</strong>
+                    </div>
+                </div>
+                
+                <!-- Location -->
+                <div class="mb-4">
+                    <h5 class="fw-bold">
+                        <i class="bi bi-geo-alt text-primary"></i> Location
+                    </h5>
+                    <p class="mb-1">{{ incident.address }}</p>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-geo"></i> {{ incident.county }}
+                        {% if incident.constituency %} • {{ incident.constituency }}{% endif %}
+                    </p>
+                </div>
+                
+                <!-- Description -->
+                <div class="mb-4">
+                    <h5 class="fw-bold">
+                        <i class="bi bi-text-paragraph text-primary"></i> Description
+                    </h5>
+                    <p class="lead">{{ incident.description }}</p>
+                </div>
+                
+                <!-- Media Gallery -->
+                {% if incident.media_files %}
+                <div class="mb-4">
+                    <h5 class="fw-bold">
+                        <i class="bi bi-images text-primary"></i> Media Evidence
+                    </h5>
+                    <div class="row g-2">
+                        {% for media in incident.media_files %}
+                        <div class="col-md-4">
+                            <img src="{{ media }}" class="img-fluid rounded" alt="Incident evidence">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Status -->
+                <div class="mb-4">
+                    <h5 class="fw-bold">
+                        <i class="bi bi-info-circle text-primary"></i> Status
+                    </h5>
+                    <div class="alert alert-{% if incident.status == 'resolved' %}success{% elif incident.status == 'investigating' %}info{% elif incident.status == 'false_report' %}danger{% else %}warning{% endif %}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Status:</strong> {{ incident.get_status_display }}
+                                {% if incident.resolved_at %}
+                                <br>
+                                <small>Resolved on {{ incident.resolved_at|date:"M d, Y" }}</small>
+                                {% endif %}
+                            </div>
+                            {% if user.is_authenticated %}
+                            <form method="post" class="btn-group">
+                                {% csrf_token %}
+                                <button name="action" value="verify"
+                                        class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-check-circle"></i> Verify
+                                </button>
+                                <button name="action" value="dispute"
+                                        class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-x-circle"></i> Dispute
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comments/Actions Section -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="bi bi-chat-left-text"></i> Community Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center mb-4">
+                    <div class="col-md-3 mb-2">
+                        <div class="border rounded p-3">
+                            <h3 class="text-success">{{ incident.verification_count }}</h3>
+                            <p class="mb-0 text-muted">Verified</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="border rounded p-3">
+                            <h3 class="text-danger">{{ incident.false_report_count }}</h3>
+                            <p class="mb-0 text-muted">Disputed</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="border rounded p-3">
+                            <h3 class="text-info">{{ incident.views }}</h3>
+                            <p class="mb-0 text-muted">Views</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="border rounded p-3">
+                            <h3 class="text-warning">{{ incident.comments_count }}</h3>
+                            <p class="mb-0 text-muted">Comments</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                {% if user.is_authenticated %}
+                <form method="post" class="d-grid gap-2 d-md-flex mb-4">
+                    {% csrf_token %}
+                    <button name="action" value="verify" class="btn btn-success flex-fill">
+                        <i class="bi bi-check-circle"></i> I Can Verify This
+                    </button>
+                    <button name="action" value="dispute" class="btn btn-danger flex-fill">
+                        <i class="bi bi-x-circle"></i> This Seems False
+                    </button>
+                    <button class="btn btn-primary flex-fill">
+                        <i class="bi bi-share"></i> Share Alert
+                    </button>
+                </form>
+                {% endif %}
+                
+                <!-- Comment Form -->
+                {% if user.is_authenticated %}
+                <form class="mb-4">
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Add Comment</label>
+                        <textarea class="form-control" id="comment" rows="3" 
+                                  placeholder="Share additional information or ask questions..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                </form>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> 
+                    <a href="{% url 'login' %}" class="alert-link">Login</a> to verify incidents or add comments.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-lightning-charge"></i> Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'report_incident' %}" class="btn btn-danger">
+                        <i class="bi bi-plus-circle"></i> Report Similar Incident
+                    </a>
+                    <a href="{% url 'emergency_services' %}" class="btn btn-warning">
+                        <i class="bi bi-telephone"></i> Call Emergency Services
+                    </a>
+                    <button class="btn btn-outline-primary">
+                        <i class="bi bi-download"></i> Download Report
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Nearby Emergency Services -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-hospital"></i> Nearby Help
+                </h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-shield-check text-primary"></i> Central Police Station
+                            <br>
+                            <small class="text-muted">2.5 km away</small>
+                        </div>
+                        <a href="tel:911" class="btn btn-sm btn-outline-primary">Call</a>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-hospital text-danger"></i> Nairobi Hospital
+                            <br>
+                            <small class="text-muted">3.1 km away</small>
+                        </div>
+                        <a href="tel:0722123456" class="btn btn-sm btn-outline-danger">Call</a>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-fire text-warning"></i> Fire Station
+                            <br>
+                            <small class="text-muted">4.2 km away</small>
+                        </div>
+                        <a href="tel:999" class="btn btn-sm btn-outline-warning">Call</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Safety Tips -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-lightbulb"></i> Safety Tips
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <strong>If you witness a crime:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Stay calm and assess the situation</li>
+                        <li>Do not intervene directly</li>
+                        <li>Note important details (description, vehicle)</li>
+                        <li>Call emergency services immediately</li>
+                        <li>Report to authorities with details</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

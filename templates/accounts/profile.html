@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - VigilanceHub{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
+                        <i class="bi bi-person-circle display-4 text-primary"></i>
+                    </div>
+                    <h5 class="mb-1">{{ user.get_full_name }}</h5>
+                    <p class="text-muted mb-0">@{{ user.username }}</p>
+                    <span class="badge bg-info mt-2">
+                        <i class="bi bi-shield-check"></i> Trusted Reporter
+                    </span>
+                </div>
+                
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'profile' %}" class="list-group-item list-group-item-action active">
+                        <i class="bi bi-person"></i> Profile Information
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="bi bi-bell"></i> Notifications
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="bi bi-shield"></i> Privacy & Security
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="bi bi-gear"></i> Account Settings
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="bi bi-question-circle"></i> Help & Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="col-md-9">
+        <!-- Profile Header -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h4 mb-0 fw-bold">Profile Information</h2>
+                    <button class="btn btn-outline-primary">
+                        <i class="bi bi-pencil"></i> Edit Profile
+                    </button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Full Name</label>
+                        <div class="form-control bg-light">{{ user.get_full_name }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Username</label>
+                        <div class="form-control bg-light">@{{ user.username }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Email Address</label>
+                        <div class="form-control bg-light">{{ user.email }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Phone Number</label>
+                        <div class="form-control bg-light">
+                            {% if user.profile.phone_number %}
+                                {{ user.profile.phone_number }}
+                            {% else %}
+                                <span class="text-muted">Not provided</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Location</label>
+                        <div class="form-control bg-light">
+                            {% if user.profile.city and user.profile.county %}
+                                {{ user.profile.city }}, {{ user.profile.county }}
+                            {% else %}
+                                <span class="text-muted">Not set</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Member Since</label>
+                        <div class="form-control bg-light">{{ user.date_joined|date:"F d, Y" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="text-primary">12</h3>
+                        <p class="text-muted mb-0">Reports Submitted</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="text-success">8</h3>
+                        <p class="text-muted mb-0">Verified Reports</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="text-warning">86%</h3>
+                        <p class="text-muted mb-0">Trust Score</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-4">
+                    <i class="bi bi-clock-history"></i> Recent Activity
+                </h5>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <i class="bi bi-exclamation-triangle text-warning"></i>
+                                    Reported: "Car accident on Moi Avenue"
+                                </td>
+                                <td>2 hours ago</td>
+                                <td><span class="badge bg-success">Verified</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Verified: "Robbery at ABC Mall"
+                                </td>
+                                <td>1 day ago</td>
+                                <td><span class="badge bg-info">Processing</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="bi bi-bell text-primary"></i>
+                                    Received alert: New incident in your area
+                                </td>
+                                <td>2 days ago</td>
+                                <td><span class="badge bg-secondary">Read</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="bi bi-shield-check text-success"></i>
+                                    Earned: Trusted Reporter badge
+                                </td>
+                                <td>1 week ago</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

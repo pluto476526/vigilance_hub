@@ -1,0 +1,153 @@
+<!-- report.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Report Incident - VigilanceHub{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0">
+            <div class="card-header gradient-primary text-white py-4">
+                <h2 class="h4 mb-0">
+                    <i class="bi bi-plus-circle"></i> Report Incident
+                </h2>
+                <p class="mb-0 opacity-75">Help keep your community safe by reporting incidents</p>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <!-- Basic Information -->
+                        <div class="col-12">
+                            <h5 class="border-bottom pb-2 mb-3" style="border-color: var(--dark-border) !important;">Basic Information</h5>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="title" class="form-label">Incident Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" 
+                                   placeholder="e.g., Robbery at ABC Mall" required>
+                            <div class="form-text">Briefly describe what happened</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="incident_type" class="form-label">Incident Type *</label>
+                            <select class="form-select" id="incident_type" name="incident_type" required>
+                                <option value="">Select type...</option>
+                                <option value="crime">Crime</option>
+                                <option value="accident">Accident</option>
+                                <option value="hazard">Hazard</option>
+                                <option value="checkpoint">Police Checkpoint</option>
+                                <option value="sos">SOS/Emergency</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="severity" class="form-label">Severity Level *</label>
+                            <select class="form-select" id="severity" name="severity" required>
+                                <option value="">Select severity...</option>
+                                <option value="low">Low Risk</option>
+                                <option value="medium">Medium Risk</option>
+                                <option value="high">High Risk</option>
+                                <option value="critical">Critical Emergency</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="county" class="form-label">County *</label>
+                            <select class="form-select" id="county" name="county" required>
+                                <option value="">Select county...</option>
+                                <option value="Nairobi">Nairobi</option>
+                                <option value="Mombasa">Mombasa</option>
+                                <option value="Kisumu">Kisumu</option>
+                                <option value="Nakuru">Nakuru</option>
+                                <option value="Eldoret">Eldoret</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label for="description" class="form-label">Detailed Description *</label>
+                            <textarea class="form-control" id="description" name="description" 
+                                      rows="4" placeholder="Provide detailed information about the incident..." required></textarea>
+                            <div class="form-text">Include date, time, people involved, and any other relevant details</div>
+                        </div>
+                        
+                        <!-- Location -->
+                        <div class="col-12">
+                            <h5 class="border-bottom pb-2 mb-3 mt-4" style="border-color: var(--dark-border) !important;">Location Details</h5>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="address" class="form-label">Address *</label>
+                            <input type="text" class="form-control" id="address" name="address" 
+                                   placeholder="e.g., ABC Mall, Moi Avenue" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="constituency" class="form-label">Constituency/Ward</label>
+                            <input type="text" class="form-control" id="constituency" name="constituency" 
+                                   placeholder="e.g., Starehe Constituency">
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="use_current_location" name="use_current_location">
+                                <label class="form-check-label" for="use_current_location">
+                                    Use my current location (browser will ask for permission)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Media Upload -->
+                        <div class="col-12">
+                            <h5 class="border-bottom pb-2 mb-3 mt-4" style="border-color: var(--dark-border) !important;">Media Evidence (Optional)</h5>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="media_files" class="form-label">Upload Photos/Videos</label>
+                            <input class="form-control" type="file" id="media_files" name="media_files" 
+                                   accept="image/*,video/*" multiple>
+                            <div class="form-text">Maximum file size: 10MB each. Blur faces automatically.</div>
+                        </div>
+                        
+                        <!-- Privacy Options -->
+                        <div class="col-12">
+                            <h5 class="border-bottom pb-2 mb-3 mt-4" style="border-color: var(--dark-border) !important;">Privacy Options</h5>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="anonymous" name="anonymous" checked>
+                                <label class="form-check-label" for="anonymous">
+                                    Report anonymously (your identity will not be shown)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="col-12 mt-4">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-send"></i> Submit Report
+                                </button>
+                                <button type="reset" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle"></i> Clear Form
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-muted border-0">
+                <small>
+                    <i class="bi bi-info-circle"></i> All reports are reviewed by our community moderators. 
+                    False reports may lead to account suspension.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

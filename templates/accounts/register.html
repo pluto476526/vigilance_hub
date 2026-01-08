@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register - VigilanceHub{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-success text-white text-center py-4">
+                <h2 class="mb-0">
+                    <i class="bi bi-person-plus"></i> Join VigilanceHub
+                </h2>
+                <p class="mb-0 opacity-75">Create your free account in 2 minutes</p>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label">
+                                <i class="bi bi-person"></i> First Name
+                            </label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label">
+                                <i class="bi bi-person"></i> Last Name
+                            </label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person-badge"></i> Username
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                            <div class="form-text">Choose a unique username</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">
+                                <i class="bi bi-envelope"></i> Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">
+                                <i class="bi bi-phone"></i> Phone Number (Optional)
+                            </label>
+                            <input type="tel" class="form-control" id="phone" name="phone">
+                            <div class="form-text">For SMS alerts and verification</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="county" class="form-label">
+                                <i class="bi bi-geo-alt"></i> County
+                            </label>
+                            <select class="form-select" id="county" name="county" required>
+                                <option value="">Select your county</option>
+                                <option value="Nairobi">Nairobi</option>
+                                <option value="Mombasa">Mombasa</option>
+                                <option value="Kisumu">Kisumu</option>
+                                <option value="Nakuru">Nakuru</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="password1" class="form-label">
+                                <i class="bi bi-lock"></i> Password
+                            </label>
+                            <input type="password" class="form-control" id="password1" name="password1" required>
+                            <div class="form-text">At least 8 characters</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="password2" class="form-label">
+                                <i class="bi bi-lock"></i> Confirm Password
+                            </label>
+                            <input type="password" class="form-control" id="password2" name="password2" required>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the 
+                                    <a href="#" class="text-decoration-none">Terms of Service</a> and 
+                                    <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="newsletter" checked>
+                                <label class="form-check-label" for="newsletter">
+                                    Send me safety alerts and community updates
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="bi bi-person-plus"></i> Create Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center py-3">
+                <p class="mb-0">
+                    Already have an account? 
+                    <a href="{% url 'login' %}" class="text-decoration-none fw-bold">Sign In</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Benefits -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body">
+                <h5 class="card-title text-center mb-3">
+                    <i class="bi bi-award"></i> Why Join VigilanceHub?
+                </h5>
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <i class="bi bi-shield-check text-primary fs-3 mb-2"></i>
+                        <h6>Trusted Community</h6>
+                        <small class="text-muted">Join thousands keeping Kenya safe</small>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <i class="bi bi-bell text-success fs-3 mb-2"></i>
+                        <h6>Real-time Alerts</h6>
+                        <small class="text-muted">Get notified about incidents near you</small>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <i class="bi bi-star text-warning fs-3 mb-2"></i>
+                        <h6>Earn Trust Score</h6>
+                        <small class="text-muted">Build reputation as trusted reporter</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

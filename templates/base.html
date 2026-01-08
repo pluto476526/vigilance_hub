@@ -1,0 +1,164 @@
+<!-- base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VigilanceHub - Community Safety{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Custom Dark Theme CSS -->
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --primary-dark: #2667cc;
+            --secondary: #6c757d;
+            --success: #38b000;
+            --danger: #ff006e;
+            --warning: #ffbe0b;
+            --info: #00bbf9;
+            --dark-bg: #0a0e17;
+            --dark-card: #121826;
+            --dark-border: #2d3748;
+            --light-text: #e2e8f0;
+            --muted-text: #94a3b8;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .card {
+            background-color: var(--dark-card);
+            border-color: var(--dark-border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+        
+        .nav-link.active {
+            background-color: var(--primary) !important;
+            color: white !important;
+        }
+        
+        .badge {
+            font-weight: 500;
+        }
+        
+        .form-control, .form-select {
+            background-color: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--light-text);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background-color: var(--dark-card);
+            border-color: var(--primary);
+            color: var(--light-text);
+            box-shadow: 0 0 0 0.25rem rgba(58, 134, 255, 0.25);
+        }
+        
+        .alert {
+            border: 1px solid var(--dark-border);
+        }
+        
+        .table {
+            color: var(--light-text);
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(58, 134, 255, 0.1);
+        }
+        
+        .list-group-item {
+            background-color: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--light-text);
+        }
+        
+        .modal-content {
+            background-color: var(--dark-card);
+            border-color: var(--dark-border);
+        }
+        
+        .footer-gradient {
+            background: linear-gradient(135deg, #0a0e17 0%, #1a2036 100%);
+        }
+        
+        .gradient-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #4dabf7 100%);
+        }
+        
+        .gradient-success {
+            background: linear-gradient(135deg, var(--success) 0%, #69db7c 100%);
+        }
+        
+        .gradient-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #ff6b9d 100%);
+        }
+        
+        .gradient-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #ffd43b 100%);
+        }
+        
+        .text-muted {
+            color: var(--muted-text) !important;
+        }
+        
+        .border-bottom {
+            border-bottom-color: var(--dark-border) !important;
+        }
+    </style>
+    
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+    
+    <!-- Navigation -->
+    {% include 'includes/navbar.html' %}
+    
+    <!-- Messages -->
+    {% include 'includes/messages.html' %}
+    
+    <!-- Main Content -->
+    <main class="flex-grow-1 py-4">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Leaflet JS for maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

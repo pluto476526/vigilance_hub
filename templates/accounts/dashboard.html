@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - VigilanceHub{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="fw-bold">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </h1>
+        <p class="text-muted">Welcome back, {{ user.first_name }}! Here's what's happening in your community.</p>
+    </div>
+</div>
+
+<!-- Stats Overview -->
+<div class="row mb-4">
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-muted">My Reports</h6>
+                        <h3 class="text-primary">12</h3>
+                    </div>
+                    <div class="text-primary">
+                        <i class="bi bi-file-text fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-muted">Trust Score</h6>
+                        <h3 class="text-success">86%</h3>
+                    </div>
+                    <div class="text-success">
+                        <i class="bi bi-shield-check fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-muted">Nearby Incidents</h6>
+                        <h3 class="text-warning">7</h3>
+                    </div>
+                    <div class="text-warning">
+                        <i class="bi bi-exclamation-triangle fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-muted">Alerts Today</h6>
+                        <h3 class="text-danger">3</h3>
+                    </div>
+                    <div class="text-danger">
+                        <i class="bi bi-bell fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Left Column -->
+    <div class="col-lg-8">
+        <!-- Quick Actions -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-4">
+                    <i class="bi bi-lightning-charge"></i> Quick Actions
+                </h5>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'report_incident' %}" class="btn btn-primary w-100 h-100 py-3">
+                            <i class="bi bi-plus-circle display-6 mb-2"></i><br>
+                            Report Incident
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'incident_map' %}" class="btn btn-success w-100 h-100 py-3">
+                            <i class="bi bi-map display-6 mb-2"></i><br>
+                            Safety Map
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'emergency_services' %}" class="btn btn-danger w-100 h-100 py-3">
+                            <i class="bi bi-telephone display-6 mb-2"></i><br>
+                            Emergency
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <button class="btn btn-warning w-100 h-100 py-3">
+                            <i class="bi bi-share display-6 mb-2"></i><br>
+                            Share Alert
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Incidents Near You -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> Recent Incidents Near You
+                    </h5>
+                    <a href="{% url 'incident_list' %}" class="btn btn-sm btn-outline-primary">
+                        View All
+                    </a>
+                </div>
+                
+                <div class="list-group list-group-flush">
+                    {% for incident in nearby_incidents %}
+                    <a href="{% url 'incident_detail' incident.id %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ incident.title }}</h6>
+                            <small class="text-muted">{{ incident.created_at|timesince }} ago</small>
+                        </div>
+                        <p class="mb-1 text-muted">{{ incident.description|truncatechars:100 }}</p>
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">
+                                <i class="bi bi-geo-alt"></i> {{ incident.address|truncatechars:40 }}
+                            </small>
+                            <span class="badge bg-{% if incident.severity == 'critical' %}danger{% elif incident.severity == 'high' %}warning{% else %}info{% endif %}">
+                                {{ incident.get_severity_display }}
+                            </span>
+                        </div>
+                    </a>
+                    {% empty %}
+                    <div class="list-group-item text-center text-muted py-4">
+                        <i class="bi bi-check-circle display-4 text-success mb-3"></i>
+                        <p class="mb-0">No recent incidents in your area. Stay safe!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Column -->
+    <div class="col-lg-4">
+        <!-- Safety Alerts -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-bell"></i> Safety Alerts
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 text-danger">High Crime Area</h6>
+                            <small>2 hours ago</small>
+                        </div>
+                        <p class="mb-1">Increased robbery reports in CBD. Stay vigilant.</p>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 text-warning">Road Accident</h6>
+                            <small>5 hours ago</small>
+                        </div>
+                        <p class="mb-1">Moi Avenue blocked due to accident. Avoid area.</p>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 text-info">Police Checkpoint</h6>
+                            <small>1 day ago</small>
+                        </div>
+                        <p class="mb-1">Routine checks on Thika Road. Expect delays.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Safety Tips -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-lightbulb"></i> Today's Safety Tip
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6>Walking at Night Safety</h6>
+                <p class="text-muted">When walking at night, stay in well-lit areas, walk confidently, and avoid using your phone excessively.</p>
+                <div class="d-grid">
+                    <button class="btn btn-outline-success">
+                        <i class="bi bi-bookmark"></i> Save Tip
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Community Stats -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-people"></i> Community Stats
+                </h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Active Reporters Today</span>
+                        <strong>147</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Incidents Resolved</span>
+                        <strong>89%</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Response Time</span>
+                        <strong>15 min</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Community Trust</span>
+                        <strong>94%</strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
